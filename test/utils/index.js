@@ -24,7 +24,7 @@ export function toErrors(ctor, ...args) {
 		new lib[ctor](...args);
 	} catch (err) {
 		local = {
-			name: err.name,
+			TypeError: err.name.includes('TypeError'),
 			message: err.message,
 			code: err.code,
 		};
@@ -34,7 +34,7 @@ export function toErrors(ctor, ...args) {
 		new url[ctor](...args);
 	} catch (err) {
 		native = {
-			name: err.name,
+			TypeError: err.name.includes('TypeError'),
 			message: err.message,
 			code: err.code,
 		};

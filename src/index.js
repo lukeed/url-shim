@@ -1,6 +1,5 @@
 function toErr(msg, code, err) {
 	err = new TypeError(msg);
-	err.name += ' [' + code + ']';
 	err.code = code;
 	throw err;
 }
