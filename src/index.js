@@ -172,7 +172,7 @@ export function URLSearchParams(init) {
 export function URL(url, base) {
 	var link = document.createElement('a');
 	var input = document.createElement('input');
-	var segs, getter = function () {return link.href};
+	var segs, getter=link.toString.bind(link);
 
 	input.type = 'url';
 	base = String(base || '').trim();
@@ -198,21 +198,41 @@ export function URL(url, base) {
 		return invalid(url);
 	}
 
-	return {
-		href: link.href,
-		// @see https://url.spec.whatwg.org/#concept-url-origin
-		origin: /(blob|ftp|wss?|https?):/.test(link.protocol) ? link.origin : 'null',
-		protocol: link.protocol,
-		username: link.username,
-		password: link.password,
-		host: link.host,
-		hostname: link.hostname,
-		port: link.port,
-		pathname: link.pathname.replace(/^\/{2,}/, '/'),
-		search: link.search,
-		searchParams: new URLSearchParams(link.search),
-		hash: link.hash,
+	function block(key, getter, readonly, out) {
+		out = { enumerable: true };
+		out.get = getter || function () { return link[key] };
+		if (!readonly) {
+			out.set = function (val) {
+				if (val != null) {
+					link[key] = String(val);
+				}
+			}
+		}
+		return out;
+	}
+
+	return Object.defineProperties({
 		toString: getter,
 		toJSON: getter,
-	};
+	}, {
+		href: block('href'),
+		protocol: block('protocol'),
+		username: block('username'),
+		password: block('password'),
+		hostname: block('hostname'),
+		host: block('host'),
+		port: block('port'),
+		search: block('search'),
+		hash: block('hash'),
+		pathname: block('pathname', function () {
+			return link.pathname.replace(/^\/{2,}/, '/');
+		}),
+		origin: block('origin', function () {
+			// @see https://url.spec.whatwg.org/#concept-url-origin
+			return /(blob|ftp|wss?|https?):/.test(link.protocol) ? link.origin : 'null';
+		}, 1),
+		searchParams: block('searchParams', function () {
+			return new URLSearchParams(link.search);
+		}, 1)
+	});
 }

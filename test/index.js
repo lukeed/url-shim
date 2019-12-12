@@ -108,5 +108,14 @@ describe('URL', () => {
 			const [local, native] = compare('URL', '', 'http://example.com');
 			expect(local).toStrictEqual(native);
 		});
+
+		it('https://abc:xyz@example.com', () => {
+			const [local, native] = compare('URL', 'https://abc:xyz@example.com');
+			expect(local).toStrictEqual(native);
+
+			local.password = '123';
+			native.password = '123';
+			expect(local).toStrictEqual(native);
+		});
 	});
 });
