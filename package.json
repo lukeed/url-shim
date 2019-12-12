@@ -24,13 +24,34 @@
   "scripts": {
     "build": "bundt",
     "pretest": "npm run build",
-    "test": "tape -r esm test/*.js | tap-spec"
+    "test": "jest"
   },
   "keywords": [],
   "devDependencies": {
+    "@babel/core": "7.7.5",
+    "@babel/plugin-transform-modules-commonjs": "7.7.5",
+    "babel-jest": "24.9.0",
     "bundt": "0.4.0",
-    "esm": "3.2.25",
-    "tap-spec": "5.0.0",
-    "tape": "4.11.0"
+    "jest": "24.9.0",
+    "jest-puppeteer": "4.3.0",
+    "prettier": "1.19.1",
+    "puppeteer": "2.0.0"
+  },
+  "jest": {
+    "cacheDirectory": "<rootDir>/.jestcache",
+    "collectCoverageFrom": [
+      "src/**"
+    ],
+    "testMatch": [
+      "<rootDir>/test/*"
+    ],
+    "transform": {
+      "\\.js$": "babel-jest"
+    }
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-transform-modules-commonjs"
+    ]
   }
 }
