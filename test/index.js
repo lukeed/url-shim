@@ -117,5 +117,15 @@ describe('URL', () => {
 			native.password = '123';
 			expect(local).toStrictEqual(native);
 		});
+
+		it('/foo/bar :: https://測試', () => {
+			const [local, native] = compare('URL', '/foo/bar', 'https://測試');
+			expect(local).toStrictEqual(native);
+		});
+
+		it('https://測試', () => {
+			const [local, native] = compare('URL', 'https://測試');
+			expect(local).toStrictEqual(native);
+		});
 	});
 });
