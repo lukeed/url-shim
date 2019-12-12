@@ -1,5 +1,5 @@
 import * as lib from '../src';
-import { compare } from './utils';
+import { compare, toErrors } from './utils';
 
 describe('exports', () => {
 	it('should export an object', () => {
@@ -16,8 +16,27 @@ describe('exports', () => {
 });
 
 describe('URL', () => {
-	// TODO
-	// describe('TypeErrors', () => {});
+	describe('TypeErrors', () => {
+		it('should throw when `base` is invalid', () => {
+			const [local, native] = toErrors('URL', '', 'foobar');
+			expect(local).toStrictEqual(native);
+		});
+
+		it('should throw when `url` is invalid w/o `base` present', () => {
+			const [local, native] = toErrors('URL', 'foobar');
+			expect(local).toStrictEqual(native);
+		});
+
+		it('should throw when `url` is an empty string', () => {
+			const [local, native] = toErrors('URL', '');
+			expect(local).toStrictEqual(native);
+		});
+
+		it('should throw when no arguments passed', () => {
+			const [local, native] = toErrors('URL');
+			expect(local).toStrictEqual(native);
+		});
+	});
 
 	describe('Matches `URL` from Node.js', () => {
 		it('file:///C:/demo', () => {

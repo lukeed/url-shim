@@ -1,5 +1,6 @@
 function toErr(msg, code, err) {
 	err = new TypeError(msg);
+	err.name += ' [' + code + ']';
 	err.code = code;
 	throw err;
 }
@@ -20,7 +21,6 @@ function args(both, x, y) {
 	toErr(x + y + 'must be specified', 'ERR_MISSING_ARGS');
 }
 
-// todo: typeerrors
 export function URLSearchParams(init) {
 	var k, i, tmp, obj={};
 

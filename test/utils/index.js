@@ -16,3 +16,29 @@ export function compare(ctor, ...args) {
 	const native = new url[ctor](...args);
 	return [local, native].map(parse);
 }
+
+export function toErrors(ctor, ...args) {
+	let local, native;
+
+	try {
+		new lib[ctor](...args);
+	} catch (err) {
+		local = {
+			name: err.name,
+			message: err.message,
+			code: err.code,
+		};
+	}
+
+	try {
+		new url[ctor](...args);
+	} catch (err) {
+		native = {
+			name: err.name,
+			message: err.message,
+			code: err.code,
+		};
+	}
+
+	return [local, native];
+}
