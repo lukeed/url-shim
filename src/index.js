@@ -22,7 +22,32 @@ function args(both, x, y) {
 }
 
 export function URLSearchParams(init) {
-	var k, i, tmp, obj={};
+	var k, i, x, tmp, obj={};
+
+	if (init) {
+		if (!!init.keys && !!init.getAll) {
+			tmp = init.keys();
+			for (i=0; i < tmp.length; i++) {
+				toAppend(tmp[i], init.getAll(tmp[i]));
+			}
+		} else if (!!init.pop) {
+			for (i=0; i < init.length; i++) {
+				toAppend.apply(0, init[i]);
+			}
+		} else if (typeof init === 'object') {
+			for (k in init) toSet(k, init[k]);
+		} else if (typeof init === 'string') {
+			x = decodeURIComponent(init).split('&');
+			while (k = x.shift()) {
+				i = k.indexOf('=');
+				if (!~i) i = k.length;
+				toAppend(
+					k.substring(0, i),
+					k.substring(++i)
+				);
+			}
+		}
+	}
 
 	function toKeys() {
 		tmp = [];
@@ -34,14 +59,21 @@ export function URLSearchParams(init) {
 		return tmp;
 	}
 
-	return {
-		append: function (key, val) {
+	function toSet(key, val) {
+		args(1);
+		obj[key] = [val];
+	}
+
+	function toAppend(key, val) {
 			args(1);
 			tmp = obj[key] || [];
 			obj[key] = tmp.concat(val);
-		},
+	}
+
+	return {
+		append: toAppend,
 		delete: function (key) {
-			args();
+			args(0);
 			delete obj[key];
 		},
 		entries: function () {
@@ -64,23 +96,20 @@ export function URLSearchParams(init) {
 			}
 		},
 		get: function (key) {
-			args();
+			args(0);
 			tmp = obj[key];
 			return tmp ? tmp[0] : null;
 		},
 		getAll: function (key) {
-			args();
+			args(0);
 			return obj[key] || [];
 		},
 		has: function (key) {
-			args();
+			args(0);
 			return obj[key] !== void 0;
 		},
 		keys: toKeys,
-		set: function (key, val) {
-			args(1);
-			obj[key] = [val];
-		},
+		set: toSet,
 		sort: function () {
 			tmp = {};
 			k = toKeys().sort();
