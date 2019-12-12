@@ -23,15 +23,40 @@ function args(both, len, x, y) {
 	}
 }
 
+function toIter(arr, supported) {
+	var val, j=0, iter = {
+		next: function () {
+			val = arr[j++];
+			return {
+				value: val,
+				done: j > arr.length
+			}
+		}
+	};
+
+	if (supported) {
+		iter[Symbol.iterator] = function () {
+			return iter;
+		};
+	}
+
+	return iter;
+}
+
 export function URLSearchParams(init) {
-	var k, i, x, tmp, obj={};
+	var k, i, x, supp, tmp, $, obj={};
+
+	try {
+		supp = !!Symbol.iterator;
+	} catch (e) {
+		supp = false;
+	}
 
 	if (init) {
 		if (!!init.keys && !!init.getAll) {
-			tmp = init.keys();
-			for (i=0; i < tmp.length; i++) {
-				toAppend(tmp[i], init.getAll(tmp[i]));
-			}
+			init.forEach(function (k, v) {
+				toAppend(k, v);
+			});
 		} else if (!!init.pop) {
 			for (i=0; i < init.length; i++) {
 				toAppend.apply(0, String(init[i]));
@@ -51,16 +76,6 @@ export function URLSearchParams(init) {
 		}
 	}
 
-	function toKeys() {
-		tmp = [];
-		for (k in obj) {
-			for (i=0; i < obj[k].length; i++) {
-				tmp.push(k);
-			}
-		}
-		return tmp;
-	}
-
 	function toSet(key, val) {
 		args(1, arguments.length);
 		obj[key] = [val];
@@ -72,7 +87,7 @@ export function URLSearchParams(init) {
 		obj[key] = tmp.concat(val);
 	}
 
-	return {
+	$ = {
 		append: toAppend,
 		delete: function (key) {
 			args(0, arguments.length);
@@ -85,7 +100,7 @@ export function URLSearchParams(init) {
 					tmp.push([k, obj[k][i]]);
 				}
 			}
-			return tmp;
+			return toIter(tmp, supp);
 		},
 		forEach: function (fn) {
 			if (typeof fn != 'function') {
@@ -110,13 +125,22 @@ export function URLSearchParams(init) {
 			args(0, arguments.length);
 			return obj[key] !== void 0;
 		},
-		keys: toKeys,
+		keys: function () {
+			tmp = [];
+			for (k in obj) {
+				for (i=0; i < obj[k].length; i++) {
+					tmp.push(k);
+				}
+			}
+			return toIter(tmp, supp);
+		},
 		set: toSet,
 		sort: function () {
+			x = [];
 			tmp = {};
-			k = toKeys().sort();
-			for (i=0; i < k.length; i++) {
-				tmp[k[i]] = obj[k[i]];
+			for (k in obj) x.push(k);
+			for (i=0; i < x.length; i++) {
+				tmp[x[i]] = obj[x[i]];
 			}
 			obj = tmp;
 		},
@@ -135,9 +159,15 @@ export function URLSearchParams(init) {
 			for (k in obj) {
 				tmp = tmp.concat(obj[k]);
 			}
-			return tmp;
+			return toIter(tmp, supp);
 		}
 	};
+
+	if (supp) {
+		$[Symbol.iterator] = $.entries;
+	}
+
+	return $;
 }
 
 export function URL(url, base) {
