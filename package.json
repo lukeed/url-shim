@@ -24,7 +24,7 @@
   "scripts": {
     "build": "bundt",
     "pretest": "npm run build",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "devDependencies": {
@@ -39,12 +39,9 @@
   },
   "jest": {
     "cacheDirectory": "<rootDir>/.jestcache",
-    "collectCoverageFrom": [
-      "src/**"
-    ],
-    "testMatch": [
-      "<rootDir>/test/*"
-    ],
+    "coverageDirectory": "<rootDir>/coverage/",
+    "collectCoverageFrom": ["src/**"],
+    "testMatch": ["<rootDir>/test/*"],
     "transform": {
       "\\.js$": "babel-jest"
     }
