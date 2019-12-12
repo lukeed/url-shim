@@ -1,5 +1,81 @@
+// todo: typeerrors
 export function URLSearchParams(init) {
+	var k, i, tmp, obj={};
 
+	function toKeys() {
+		tmp = [];
+		for (k in obj) {
+			for (i=0; i < obj[k].length; i++) {
+				tmp.push(k);
+			}
+		}
+		return tmp;
+	}
+
+	return {
+		append: function (key, val) {
+			tmp = obj[key] || [];
+			obj[key] = tmp.concat(val);
+		},
+		delete: function (key) {
+			delete obj[key];
+		},
+		entries: function () {
+			tmp = [];
+			for (k in obj) {
+				for (i=0; i < obj[k].length; i++) {
+					tmp.push([k, obj[k][i]]);
+				}
+			}
+			return tmp;
+		},
+		forEach: function (fn) {
+			for (k in obj) {
+				for (i=0; i < obj[k].length; i++) {
+					fn(obj[k][i], k);
+				}
+			}
+		},
+		get: function (key) {
+			tmp = obj[key];
+			return tmp ? tmp[0] : null;
+		},
+		getAll: function (key) {
+			return obj[key] || [];
+		},
+		has: function (key) {
+			return obj[key] !== void 0;
+		},
+		keys: toKeys,
+		set: function (key, val) {
+			obj[key] = [val];
+		},
+		sort: function () {
+			tmp = {};
+			k = toKeys().sort();
+			for (i=0; i < k.length; i++) {
+				tmp[k[i]] = obj[k[i]];
+			}
+			obj = tmp;
+		},
+		toString: function () {
+			tmp = '';
+			for (k in obj) {
+				for (i=0; i < obj[k].length; i++) {
+					tmp && (tmp += '&');
+					tmp += encodeURIComponent(k) + '=' + encodeURIComponent(obj[k][i]);
+				}
+			}
+			return tmp;
+		},
+		values: function () {
+			tmp = [];
+			for (k in obj) {
+				tmp = tmp.concat(obj[k]);
+			}
+			return tmp;
+		}
+	};
 }
 
 function invalid(str) {
