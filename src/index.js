@@ -34,10 +34,10 @@ export function URLSearchParams(init) {
 			}
 		} else if (!!init.pop) {
 			for (i=0; i < init.length; i++) {
-				toAppend.apply(0, init[i]);
+				toAppend.apply(0, String(init[i]));
 			}
 		} else if (typeof init === 'object') {
-			for (k in init) toSet(k, init[k]);
+			for (k in init) toSet(k, String(init[k]));
 		} else if (typeof init === 'string') {
 			x = decodeURIComponent(init).split('&');
 			while (k = x.shift()) {
