@@ -1,3 +1,25 @@
+function toErr(msg, code, err) {
+	err = new TypeError(msg);
+	err.code = code;
+	throw err;
+}
+
+function invalid(str) {
+	toErr('Invalid URL: ' + str, 'ERR_INVALID_URL');
+}
+
+function args(both, x, y) {
+	x = 'The "name" ';
+	y = 'argument';
+
+	if (both) {
+		x += 'and "value" ';
+		y += 's';
+	}
+
+	toErr(x + y + 'must be specified', 'ERR_MISSING_ARGS');
+}
+
 // todo: typeerrors
 export function URLSearchParams(init) {
 	var k, i, tmp, obj={};
@@ -14,10 +36,12 @@ export function URLSearchParams(init) {
 
 	return {
 		append: function (key, val) {
+			args(1);
 			tmp = obj[key] || [];
 			obj[key] = tmp.concat(val);
 		},
 		delete: function (key) {
+			args();
 			delete obj[key];
 		},
 		entries: function () {
@@ -30,6 +54,9 @@ export function URLSearchParams(init) {
 			return tmp;
 		},
 		forEach: function (fn) {
+			if (typeof fn != 'function') {
+				toErr('Callback must be a function', 'ERR_INVALID_CALLBACK');
+			}
 			for (k in obj) {
 				for (i=0; i < obj[k].length; i++) {
 					fn(obj[k][i], k);
@@ -37,17 +64,21 @@ export function URLSearchParams(init) {
 			}
 		},
 		get: function (key) {
+			args();
 			tmp = obj[key];
 			return tmp ? tmp[0] : null;
 		},
 		getAll: function (key) {
+			args();
 			return obj[key] || [];
 		},
 		has: function (key) {
+			args();
 			return obj[key] !== void 0;
 		},
 		keys: toKeys,
 		set: function (key, val) {
+			args(1);
 			obj[key] = [val];
 		},
 		sort: function () {
@@ -76,12 +107,6 @@ export function URLSearchParams(init) {
 			return tmp;
 		}
 	};
-}
-
-function invalid(str) {
-	var err = new TypeError(`Invalid URL: ${str}`);
-	err.code = 'ERR_INVALID_URL';
-	throw err;
 }
 
 export function URL(url, base) {
