@@ -9,7 +9,7 @@ function invalid(str) {
 	toErr('Invalid URL: ' + str, 'ERR_INVALID_URL');
 }
 
-function args(both, x, y) {
+function args(both, len, x, y) {
 	x = 'The "name" ';
 	y = 'argument';
 
@@ -18,7 +18,9 @@ function args(both, x, y) {
 		y += 's';
 	}
 
-	toErr(x + y + 'must be specified', 'ERR_MISSING_ARGS');
+	if (len < ++both) {
+		toErr(x + y + ' must be specified', 'ERR_MISSING_ARGS');
+	}
 }
 
 export function URLSearchParams(init) {
@@ -60,20 +62,20 @@ export function URLSearchParams(init) {
 	}
 
 	function toSet(key, val) {
-		args(1);
+		args(1, arguments.length);
 		obj[key] = [val];
 	}
 
 	function toAppend(key, val) {
-			args(1);
-			tmp = obj[key] || [];
-			obj[key] = tmp.concat(val);
+		args(1, arguments.length);
+		tmp = obj[key] || [];
+		obj[key] = tmp.concat(val);
 	}
 
 	return {
 		append: toAppend,
 		delete: function (key) {
-			args(0);
+			args(0, arguments.length);
 			delete obj[key];
 		},
 		entries: function () {
@@ -96,16 +98,16 @@ export function URLSearchParams(init) {
 			}
 		},
 		get: function (key) {
-			args(0);
+			args(0, arguments.length);
 			tmp = obj[key];
 			return tmp ? tmp[0] : null;
 		},
 		getAll: function (key) {
-			args(0);
+			args(0, arguments.length);
 			return obj[key] || [];
 		},
 		has: function (key) {
-			args(0);
+			args(0, arguments.length);
 			return obj[key] !== void 0;
 		},
 		keys: toKeys,
