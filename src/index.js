@@ -97,7 +97,7 @@ export function URLSearchParams(init, ref) {
 
 	function toAppend(key, val) {
 		args(1, arguments.length);
-		list.push([key,val]);
+		list.push([key, val]);
 		cascade();
 	}
 
@@ -107,7 +107,7 @@ export function URLSearchParams(init, ref) {
 			tmp && (tmp += '&');
 			tmp += encodeURIComponent(list[i][0]) + '=' + encodeURIComponent(list[i][1]);
 		}
-		return tmp;
+		return tmp.replace(/%20/g, '+');
 	}
 
 	function cascade() {
