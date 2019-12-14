@@ -104,8 +104,7 @@ export function URLSearchParams(init, ref) {
 		tmp = '';
 		for (i=0; i < list.length; i++) {
 			if (tmp) tmp += '&';
-			tmp += encodeURIComponent(list[i][0]);
-			if (k = list[i][1]) tmp += '=' + encodeURIComponent(k);
+			tmp += encodeURIComponent(list[i][0]) + '=' + encodeURIComponent(list[i][1]);
 		}
 		return tmp.replace(/%20/g, '+');
 	}
