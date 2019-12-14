@@ -80,7 +80,7 @@ export function URLSearchParams(init, ref) {
 		args(1, arguments.length);
 		val = String(val);
 		x = false; // found?
-		for (i=0; i < list.length; i++) {
+		for (i=list.length; i--;) {
 			tmp = list[i];
 			if (tmp[0] == key) {
 				if (x) {
@@ -117,7 +117,7 @@ export function URLSearchParams(init, ref) {
 	$.append = toAppend;
 	$.delete = function (key) {
 		args(0, arguments.length);
-		for (i=0; i < list.length; i++) {
+		for (i=list.length; i--;) {
 			if (list[i][0] == key) list.splice(i, 1);
 		}
 		cascade();
