@@ -58,10 +58,10 @@ export function URLSearchParams(init, ref) {
 			});
 		} else if (!!init.pop) {
 			for (i=0; i < init.length; i++) {
-				toAppend.apply(0, String(init[i]));
+				toAppend.apply(0, init[i]);
 			}
 		} else if (typeof init == 'object') {
-			for (k in init) toSet(k, String(init[k]));
+			for (k in init) toSet(k, init[k]);
 		} else if (typeof init == 'string') {
 			if (init[0] == '?') init = init.substring(1);
 			x = decodeURIComponent(init).split('&');
@@ -78,6 +78,7 @@ export function URLSearchParams(init, ref) {
 
 	function toSet(key, val) {
 		args(1, arguments.length);
+		val = String(val);
 		x = false; // found?
 		for (i=0; i < list.length; i++) {
 			tmp = list[i];
@@ -96,7 +97,7 @@ export function URLSearchParams(init, ref) {
 
 	function toAppend(key, val) {
 		args(1, arguments.length);
-		list.push([key, val]);
+		list.push([key, String(val)]);
 		cascade();
 	}
 
