@@ -14,7 +14,7 @@ export function parse(obj) {
 export function compare(ctor, ...args) {
 	const local = new lib[ctor](...args);
 	const native = new url[ctor](...args);
-	return [local, native].map(parse);
+	return [local, native].map(ctor == 'URL' ? parse : String);
 }
 
 export function toErrors(ctor, ...args) {
