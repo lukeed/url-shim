@@ -110,7 +110,7 @@ export function URLSearchParams(init, ref) {
 	}
 
 	function cascade() {
-		if (ref) ref.search = list.length ? ('?' + toStr()) : '';
+		if (ref) ref.search = list.length ? ('?' + toStr().replace(/=$/, '')) : '';
 	}
 
 	$.append = toAppend;
