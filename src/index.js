@@ -43,7 +43,7 @@ function toIter(arr, supported) {
 }
 
 export function URLSearchParams(init, ref) {
-	var k, i, x, supp, tmp, $, list=[];
+	var k, i, x, supp, tmp, $=this, list=[];
 
 	try {
 		supp = !!Symbol.iterator;
@@ -114,80 +114,78 @@ export function URLSearchParams(init, ref) {
 		if (ref) ref.search = list.length ? ('?' + toStr()) : '';
 	}
 
-	$ = {
-		append: toAppend,
-		delete: function (key) {
-			args(0, arguments.length);
-			for (i=0; i < list.length; i++) {
-				if (list[i][0] == key) list.splice(i, 1);
-			}
-			cascade();
-		},
-		entries: function () {
-			return toIter(list, supp);
-		},
-		forEach: function (fn) {
-			if (typeof fn != 'function') {
-				toErr('Callback must be a function', 'ERR_INVALID_CALLBACK');
-			}
-			for (i=0; i < list.length; i++) {
-				fn(list[i][1], list[i][0]); // (val,key)
-			}
-		},
-		get: function (key) {
-			args(0, arguments.length);
-			for (i=0; i < list.length; i++) {
-				if (list[i][0] == key) return list[i][1];
-			}
-			return null;
-		},
-		getAll: function (key) {
-			args(0, arguments.length);
-			tmp = [];
-			for (i=0; i < list.length; i++) {
-				if (list[i][0] == key) {
-					tmp.push(list[i][1]);
-				}
-			}
-			return tmp;
-		},
-		has: function (key) {
-			args(0, arguments.length);
-			for (i=0; i < list.length; i++) {
-				if (list[i][0] == key) return true;
-			}
-			return false;
-		},
-		keys: function () {
-			tmp = [];
-			for (i=0; i < list.length; i++) {
-				tmp.push(list[i][0]);
-			}
-			return toIter(tmp, supp);
-		},
-		set: toSet,
-		sort: function () {
-			x = []; tmp = [];
-			for (i=0; i < list.length; x.push(list[i++][0]));
-			for (x.sort(); k = x.shift();) {
-				for (i=0; i < list.length; i++) {
-					if (list[i][0] == k) {
-						tmp.push(list.splice(i, 1).shift());
-						break;
-					}
-				}
-			}
-			list = tmp;
-			cascade();
-		},
-		toString: toStr,
-		values: function () {
-			tmp = [];
-			for (i=0; i < list.length; i++) {
+	$.append = toAppend;
+	$.delete = function (key) {
+		args(0, arguments.length);
+		for (i=0; i < list.length; i++) {
+			if (list[i][0] == key) list.splice(i, 1);
+		}
+		cascade();
+	};
+	$.entries = function () {
+		return toIter(list, supp);
+	};
+	$.forEach = function (fn) {
+		if (typeof fn != 'function') {
+			toErr('Callback must be a function', 'ERR_INVALID_CALLBACK');
+		}
+		for (i=0; i < list.length; i++) {
+			fn(list[i][1], list[i][0]); // (val,key)
+		}
+	};
+	$.get = function (key) {
+		args(0, arguments.length);
+		for (i=0; i < list.length; i++) {
+			if (list[i][0] == key) return list[i][1];
+		}
+		return null;
+	};
+	$.getAll = function (key) {
+		args(0, arguments.length);
+		tmp = [];
+		for (i=0; i < list.length; i++) {
+			if (list[i][0] == key) {
 				tmp.push(list[i][1]);
 			}
-			return toIter(tmp, supp);
 		}
+		return tmp;
+	};
+	$.has = function (key) {
+		args(0, arguments.length);
+		for (i=0; i < list.length; i++) {
+			if (list[i][0] == key) return true;
+		}
+		return false;
+	};
+	$.keys = function () {
+		tmp = [];
+		for (i=0; i < list.length; i++) {
+			tmp.push(list[i][0]);
+		}
+		return toIter(tmp, supp);
+	},
+	$.set = toSet;
+	$.sort = function () {
+		x = []; tmp = [];
+		for (i=0; i < list.length; x.push(list[i++][0]));
+		for (x.sort(); k = x.shift();) {
+			for (i=0; i < list.length; i++) {
+				if (list[i][0] == k) {
+					tmp.push(list.splice(i, 1).shift());
+					break;
+				}
+			}
+		}
+		list = tmp;
+		cascade();
+	};
+	$.toString = toStr;
+	$.values = function () {
+		tmp = [];
+		for (i=0; i < list.length; i++) {
+			tmp.push(list[i][1]);
+		}
+		return toIter(tmp, supp);
 	};
 
 	if (supp) {
