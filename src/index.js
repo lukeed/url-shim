@@ -53,7 +53,7 @@ export function URLSearchParams(init, ref) {
 
 	if (init) {
 		if (!!init.keys && !!init.getAll) {
-			init.forEach(function (k, v) {
+			init.forEach(function (v, k) {
 				toAppend(k, v);
 			});
 		} else if (!!init.pop) {
