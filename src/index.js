@@ -45,7 +45,6 @@ function toIter(arr, supported) {
 export function URLSearchParams(init, ref) {
 	var k, i, x, supp, tmp, $, list=[];
 
-
 	try {
 		supp = !!Symbol.iterator;
 	} catch (e) {
@@ -104,8 +103,9 @@ export function URLSearchParams(init, ref) {
 	function toStr() {
 		tmp = '';
 		for (i=0; i < list.length; i++) {
-			tmp && (tmp += '&');
-			tmp += encodeURIComponent(list[i][0]) + '=' + encodeURIComponent(list[i][1]);
+			if (tmp) tmp += '&';
+			tmp += encodeURIComponent(list[i][0]);
+			if (k = list[i][1]) tmp += '=' + encodeURIComponent(k);
 		}
 		return tmp.replace(/%20/g, '+');
 	}
