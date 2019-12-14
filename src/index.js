@@ -214,7 +214,10 @@ export function URL(url, base) {
 	} else if (base) {
 		link.href = base;
 		if (url) { // non-empty string
-			if (url[0] == '/' || link.pathname === '/') {
+			usp = url.match(/^\/+/);
+			if (usp && usp[0].length == 2) {
+				link.href = link.protocol + url;
+			} else if (url[0] == '/' || link.pathname == '/') {
 				link.href = link.origin + '/' + url.replace(/^\/+/, '');
 			} else {
 				segs = link.pathname.split('/');
