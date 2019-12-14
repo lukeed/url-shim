@@ -42,8 +42,9 @@ function toIter(arr, supported) {
 	return iter;
 }
 
-export function URLSearchParams(init) {
-	var k, i, x, supp, tmp, $, obj={};
+export function URLSearchParams(init, ref) {
+	var k, i, x, supp, tmp, $, list=[];
+
 
 	try {
 		supp = !!Symbol.iterator;
@@ -60,9 +61,10 @@ export function URLSearchParams(init) {
 			for (i=0; i < init.length; i++) {
 				toAppend.apply(0, String(init[i]));
 			}
-		} else if (typeof init === 'object') {
+		} else if (typeof init == 'object') {
 			for (k in init) toSet(k, String(init[k]));
-		} else if (typeof init === 'string') {
+		} else if (typeof init == 'string') {
+			if (init[0] == '?') init = init.substring(1);
 			x = decodeURIComponent(init).split('&');
 			while (k = x.shift()) {
 				i = k.indexOf('=');
@@ -77,86 +79,112 @@ export function URLSearchParams(init) {
 
 	function toSet(key, val) {
 		args(1, arguments.length);
-		obj[key] = [val];
+		x = false; // found?
+		for (i=0; i < list.length; i++) {
+			tmp = list[i];
+			if (tmp[0] == key) {
+				if (x) {
+					list.splice(i, 1);
+				} else {
+					tmp[1] = val;
+					x = true;
+				}
+			}
+		}
+		x || list.push([key, val]);
+		cascade();
 	}
 
 	function toAppend(key, val) {
 		args(1, arguments.length);
-		tmp = obj[key] || [];
-		obj[key] = tmp.concat(val);
+		list.push([key,val]);
+		cascade();
+	}
+
+	function toStr() {
+		tmp = '';
+		for (i=0; i < list.length; i++) {
+			tmp && (tmp += '&');
+			tmp += encodeURIComponent(list[i][0]) + '=' + encodeURIComponent(list[i][1]);
+		}
+		return tmp;
+	}
+
+	function cascade() {
+		if (ref) ref.search = list.length ? ('?' + toStr()) : '';
 	}
 
 	$ = {
 		append: toAppend,
 		delete: function (key) {
 			args(0, arguments.length);
-			delete obj[key];
+			for (i=0; i < list.length; i++) {
+				if (list[i][0] == key) list.splice(i, 1);
+			}
+			cascade();
 		},
 		entries: function () {
-			tmp = [];
-			for (k in obj) {
-				for (i=0; i < obj[k].length; i++) {
-					tmp.push([k, obj[k][i]]);
-				}
-			}
-			return toIter(tmp, supp);
+			return toIter(list, supp);
 		},
 		forEach: function (fn) {
 			if (typeof fn != 'function') {
 				toErr('Callback must be a function', 'ERR_INVALID_CALLBACK');
 			}
-			for (k in obj) {
-				for (i=0; i < obj[k].length; i++) {
-					fn(obj[k][i], k);
-				}
+			for (i=0; i < list.length; i++) {
+				fn(list[i][1], list[i][0]); // (val,key)
 			}
 		},
 		get: function (key) {
 			args(0, arguments.length);
-			tmp = obj[key];
-			return tmp ? tmp[0] : null;
+			for (i=0; i < list.length; i++) {
+				if (list[i][0] == key) return list[i][1];
+			}
+			return null;
 		},
 		getAll: function (key) {
 			args(0, arguments.length);
-			return obj[key] || [];
+			tmp = [];
+			for (i=0; i < list.length; i++) {
+				if (list[i][0] == key) {
+					tmp.push(list[i][1]);
+				}
+			}
+			return tmp;
 		},
 		has: function (key) {
 			args(0, arguments.length);
-			return obj[key] !== void 0;
+			for (i=0; i < list.length; i++) {
+				if (list[i][0] == key) return true;
+			}
+			return false;
 		},
 		keys: function () {
 			tmp = [];
-			for (k in obj) {
-				for (i=0; i < obj[k].length; i++) {
-					tmp.push(k);
-				}
+			for (i=0; i < list.length; i++) {
+				tmp.push(list[i][0]);
 			}
 			return toIter(tmp, supp);
 		},
 		set: toSet,
 		sort: function () {
-			x = [];
-			tmp = {};
-			for (k in obj) x.push(k);
-			for (i=0; i < x.length; i++) {
-				tmp[x[i]] = obj[x[i]];
-			}
-			obj = tmp;
-		},
-		toString: function () {
-			tmp = '';
-			for (k in obj) {
-				for (i=0; i < obj[k].length; i++) {
-					tmp && (tmp += '&');
-					tmp += encodeURIComponent(k) + '=' + encodeURIComponent(obj[k][i]);
+			x = []; tmp = [];
+			for (i=0; i < list.length; x.push(list[i++][0]));
+			for (x.sort(); k = x.shift();) {
+				for (i=0; i < list.length; i++) {
+					if (list[i][0] == k) {
+						tmp.push(list.splice(i, 1).shift());
+						break;
+					}
 				}
 			}
-			return tmp;
+			list = tmp;
+			cascade();
 		},
+		toString: toStr,
 		values: function () {
 			tmp = [];
-			for (k in obj) {
-				tmp = tmp.concat(obj[k]);
+			for (i=0; i < list.length; i++) {
+				tmp.push(list[i][1]);
 			}
 			return toIter(tmp, supp);
 		}
@@ -172,7 +200,7 @@ export function URLSearchParams(init) {
 export function URL(url, base) {
 	var link = document.createElement('a');
 	var input = document.createElement('input');
-	var segs, getter=link.toString.bind(link);
+	var segs, usp, getter=link.toString.bind(link);
 
 	input.type = 'url';
 	base = String(base || '').trim();
@@ -205,11 +233,16 @@ export function URL(url, base) {
 			out.set = function (val) {
 				if (val != null) {
 					link[key] = String(val);
+					if (key == 'href' || key == 'search') {
+						usp = new URLSearchParams(link.search, link);
+					}
 				}
 			}
 		}
 		return out;
 	}
+
+	usp = new URLSearchParams(link.search, link);
 
 	return Object.defineProperties({
 		toString: getter,
@@ -232,7 +265,7 @@ export function URL(url, base) {
 			return /(blob|ftp|wss?|https?):/.test(link.protocol) ? link.origin : 'null';
 		}, 1),
 		searchParams: block('searchParams', function () {
-			return new URLSearchParams(link.search);
+			return usp;
 		}, 1)
 	});
 }
