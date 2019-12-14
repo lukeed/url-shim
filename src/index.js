@@ -217,6 +217,8 @@ export function URL(url, base) {
 			usp = url.match(/^\/+/);
 			if (usp && usp[0].length == 2) {
 				link.href = link.protocol + url;
+			} else if (/[?#]/.test(url[0])) {
+				link.href += url;
 			} else if (url[0] == '/' || link.pathname == '/') {
 				link.href = link.origin + '/' + url.replace(/^\/+/, '');
 			} else {
