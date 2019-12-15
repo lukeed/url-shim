@@ -198,7 +198,7 @@ export function URLSearchParams(init, ref) {
 export function URL(url, base) {
 	var link = document.createElement('a');
 	var input = document.createElement('input');
-	var segs, usp, getter=link.toString.bind(link);
+	var segs, usp, $=this;
 
 	input.type = 'url';
 	base = String(base || '').trim();
@@ -247,10 +247,9 @@ export function URL(url, base) {
 
 	usp = new URLSearchParams(link.search, link);
 
-	return Object.defineProperties({
-		toString: getter,
-		toJSON: getter,
-	}, {
+	$.toString = $.toJSON = link.toString.bind(link);
+
+	return Object.defineProperties($, {
 		href: block('href'),
 		protocol: block('protocol'),
 		username: block('username'),

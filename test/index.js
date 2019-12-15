@@ -38,6 +38,13 @@ describe('URL', () => {
 		});
 	});
 
+	describe('Instance', () => {
+		it('should return an instance of `URL` class', () => {
+			const local = new lib.URL('http:/foo.com');
+			expect(local instanceof lib.URL).toBe(true);
+		});
+	});
+
 	describe('Matches `URL` from Node.js', () => {
 		it('file:///C:/demo', () => {
 			const [local, native] = compare('URL', 'file:///C:/demo');
