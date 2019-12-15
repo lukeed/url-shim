@@ -2,7 +2,7 @@
   "name": "url-shim",
   "version": "0.0.0",
   "repository": "lukeed/url-shim",
-  "description": "WIP",
+  "description": "A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes",
   "module": "dist/urlshim.mjs",
   "unpkg": "dist/urlshim.min.js",
   "main": "dist/urlshim.js",
@@ -26,7 +26,13 @@
     "pretest": "npm run build",
     "test": "jest --coverage"
   },
-  "keywords": [],
+  "keywords": [
+    "nodejs",
+    "polyfill",
+    "shim",
+    "url",
+    "urlsearchparams"
+  ],
   "devDependencies": {
     "@babel/core": "7.7.5",
     "@babel/plugin-transform-modules-commonjs": "7.7.5",
