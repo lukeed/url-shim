@@ -1,5 +1,5 @@
 import * as lib from '../src';
-import { compare, toErrors } from './utils';
+import { compare, parse, toErrors } from './utils';
 
 describe('exports', () => {
 	it('should export an object', () => {
@@ -49,90 +49,351 @@ describe('URL', () => {
 		it('file:///C:/demo', () => {
 			const [local, native] = compare('URL', 'file:///C:/demo');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'file:///C:/demo',
+				origin: 'null',
+				protocol: 'file:',
+				username: '',
+				password: '',
+				host: '',
+				hostname: '',
+				port: '',
+				pathname: '/C:/demo',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('webpack:///C:/demo', () => {
 			const [local, native] = compare('URL', 'webpack:///C:/demo');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'webpack:///C:/demo',
+				origin: 'null',
+				protocol: 'webpack:',
+				username: '',
+				password: '',
+				host: '',
+				hostname: '',
+				port: '',
+				pathname: '/C:/demo',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('./hello/world :: http://example.com', () => {
 			const [local, native] = compare('URL', './hello/world', 'http://example.com');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('../hello/world :: http://example.com', () => {
 			const [local, native] = compare('URL', '../hello/world', 'http://example.com');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/hello/world :: http://example.com', () => {
 			const [local, native] = compare('URL', '/hello/world', 'http://example.com');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('./hello/world :: http://example.com/foo/bar', () => {
 			const [local, native] = compare('URL', './hello/world', 'http://example.com/foo/bar');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/foo/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/foo/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('../hello/world :: http://example.com/foo/bar', () => {
 			const [local, native] = compare('URL', '../hello/world', 'http://example.com/foo/bar');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/hello/world :: http://example.com/foo/bar', () => {
 			const [local, native] = compare('URL', '/hello/world', 'http://example.com/foo/bar');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/hello/world',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/hello/world',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/ :: http://example.com/foo/bar', () => {
 			const [local, native] = compare('URL', '/', 'http://example.com/foo/bar');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/ :: http://example.com/', () => {
 			const [local, native] = compare('URL', '/', 'http://example.com/');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/ :: http://example.com', () => {
 			const [local, native] = compare('URL', '/', 'http://example.com');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('"" :: http://example.com/foo/bar', () => {
 			const [local, native] = compare('URL', '', 'http://example.com/foo/bar');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/foo/bar',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/foo/bar',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('"" :: http://example.com/', () => {
 			const [local, native] = compare('URL', '', 'http://example.com/');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('"" :: http://example.com', () => {
 			const [local, native] = compare('URL', '', 'http://example.com');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'http://example.com/',
+				origin: 'http://example.com',
+				protocol: 'http:',
+				username: '',
+				password: '',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('https://abc:xyz@example.com', () => {
-			const [local, native] = compare('URL', 'https://abc:xyz@example.com');
-			expect(local).toStrictEqual(native);
+			const local = new lib.URL('https://abc:xyz@example.com');
+			const native = new URL('https://abc:xyz@example.com');
+
+			const local_foo = parse(local);
+			const native_foo = parse(native);
+			expect(local_foo).toStrictEqual(native_foo);
+
+			// direct copy from Node.js – insurance
+			expect(local_foo).toStrictEqual({
+				href: 'https://abc:xyz@example.com/',
+				origin: 'https://example.com',
+				protocol: 'https:',
+				username: 'abc',
+				password: 'xyz',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 
 			local.password = '123';
 			native.password = '123';
-			expect(local).toStrictEqual(native);
+
+			const local_bar = parse(local);
+			const native_bar = parse(native);
+			expect(local_bar).toStrictEqual(native_bar);
+
+			// direct copy from Node.js – insurance
+			expect(local_bar).toStrictEqual({
+				href: 'https://abc:123@example.com/',
+				origin: 'https://example.com',
+				protocol: 'https:',
+				username: 'abc',
+				password: '123',
+				host: 'example.com',
+				hostname: 'example.com',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('/foo/bar :: https://測試', () => {
 			const [local, native] = compare('URL', '/foo/bar', 'https://測試');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'https://xn--g6w251d/foo/bar',
+				origin: 'https://xn--g6w251d',
+				protocol: 'https:',
+				username: '',
+				password: '',
+				host: 'xn--g6w251d',
+				hostname: 'xn--g6w251d',
+				port: '',
+				pathname: '/foo/bar',
+				search: '',
+				hash: ''
+			});
 		});
 
 		it('https://測試', () => {
 			const [local, native] = compare('URL', 'https://測試');
 			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'https://xn--g6w251d/',
+				origin: 'https://xn--g6w251d',
+				protocol: 'https:',
+				username: '',
+				password: '',
+				host: 'xn--g6w251d',
+				hostname: 'xn--g6w251d',
+				port: '',
+				pathname: '/',
+				search: '',
+				hash: ''
+			});
 		});
 	});
 });
