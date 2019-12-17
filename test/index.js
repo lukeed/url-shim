@@ -84,6 +84,25 @@ describe('URL', () => {
 			});
 		});
 
+		it('git://github.com/lukeed/url-shim', () => {
+			const [local, native] = compare('URL', 'git://github.com/lukeed/url-shim');
+			expect(local).toStrictEqual(native);
+			// direct copy from Node.js – insurance
+			expect(local).toStrictEqual({
+				href: 'git://github.com/lukeed/url-shim',
+				origin: 'null',
+				protocol: 'git:',
+				username: '',
+				password: '',
+				host: 'github.com',
+				hostname: 'github.com',
+				port: '',
+				pathname: '/lukeed/url-shim',
+				search: '',
+				hash: ''
+			});
+		});
+
 		it('./hello/world :: http://example.com', () => {
 			const [local, native] = compare('URL', './hello/world', 'http://example.com');
 			expect(local).toStrictEqual(native);

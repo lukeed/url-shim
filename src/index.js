@@ -196,9 +196,10 @@ export function URLSearchParams(init, ref) {
 }
 
 export function URL(url, base) {
+	var tmp = document.createElement('a');
 	var link = document.createElement('a');
 	var input = document.createElement('input');
-	var segs, usp, $=this;
+	var segs, usp, $=this, rgx=/(blob|ftp|wss?|https?):/;
 
 	input.type = 'url';
 	base = String(base || '').trim();
@@ -229,9 +230,16 @@ export function URL(url, base) {
 		return invalid(url);
 	}
 
-	function block(key, getter, readonly, out) {
+	function proxy(key) {
+		tmp.href=link.href; tmp.protocol='http:';
+		if (key == 'protocol' || key == 'href' || rgx.test(link.protocol)) return link[key];
+		// @see https://url.spec.whatwg.org/#concept-url-origin
+		if (key == 'origin') return rgx.test(link.protocol) ? link[key] : 'null';
+		return tmp[key];
+	}
+
+	function block(key, readonly, getter, out) {
 		out = { enumerable: true };
-		out.get = getter || function () { return link[key] };
 		if (!readonly) {
 			out.set = function (val) {
 				if (val != null) {
@@ -242,6 +250,9 @@ export function URL(url, base) {
 				}
 			}
 		}
+		out.get = getter || function () {
+			return proxy(key);
+		};
 		return out;
 	}
 
@@ -259,15 +270,10 @@ export function URL(url, base) {
 		port: block('port'),
 		search: block('search'),
 		hash: block('hash'),
-		pathname: block('pathname', function () {
-			return link.pathname.replace(/^\/{2,}/, '/');
-		}),
-		origin: block('origin', function () {
-			// @see https://url.spec.whatwg.org/#concept-url-origin
-			return /(blob|ftp|wss?|https?):/.test(link.protocol) ? link.origin : 'null';
-		}, 1),
-		searchParams: block('searchParams', function () {
+		pathname: block('pathname'),
+		origin: block('origin', 1),
+		searchParams: block('searchParams', 1, function () {
 			return usp;
-		}, 1)
+		})
 	});
 }
