@@ -1,6 +1,6 @@
 {
   "name": "url-shim",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "repository": "lukeed/url-shim",
   "description": "A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes",
   "module": "dist/urlshim.mjs",
@@ -46,8 +46,12 @@
   "jest": {
     "cacheDirectory": "<rootDir>/.jestcache",
     "coverageDirectory": "<rootDir>/coverage/",
-    "collectCoverageFrom": ["src/**"],
-    "testMatch": ["<rootDir>/test/*"],
+    "collectCoverageFrom": [
+      "src/**"
+    ],
+    "testMatch": [
+      "<rootDir>/test/*"
+    ],
     "transform": {
       "\\.js$": "babel-jest"
     }
