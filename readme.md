@@ -8,7 +8,7 @@
 _For example, browsers have issue with custom protocols, which affects the `origin` and `pathname` parsing._
 
 * Most polyfills match the browser implementations.<br>
-_But what if you have a "universal app" and want to guarantee Server/Browser uniformity?_
+_But what if you have a "universal app" and want to guarantee client/server uniformity?_
 
 * Most polyfills immediately (albeit, conditionally) mutate global scope.<br>
 _You can't declaratively import their implementations for standalone usage._
@@ -17,9 +17,9 @@ _You can't declaratively import their implementations for standalone usage._
 
 This module is available in three formats:
 
-* **ES Module**: `dist/urlshim.mjs`
-* **CommonJS**: `dist/urlshim.js`
-* **UMD**: `dist/urlshim.min.js`
+* **ES Module**: `dist/nodeurl.mjs`
+* **CommonJS**: `dist/nodeurl.js`
+* **UMD**: `dist/nodeurl.min.js`
 
 
 ## Install
