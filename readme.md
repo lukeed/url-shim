@@ -1,4 +1,4 @@
-# node-url [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/node-url)](https://codecov.io/gh/lukeed/node-url)
+# url-shim [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/url-shim)](https://codecov.io/gh/lukeed/url-shim)
 
 > A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes.
 
@@ -17,22 +17,22 @@ _You can't declaratively import their implementations for standalone usage._
 
 This module is available in three formats:
 
-* **ES Module**: `dist/nodeurl.mjs`
-* **CommonJS**: `dist/nodeurl.js`
-* **UMD**: `dist/nodeurl.min.js`
+* **ES Module**: `dist/urlshim.mjs`
+* **CommonJS**: `dist/urlshim.js`
+* **UMD**: `dist/urlshim.min.js`
 
 
 ## Install
 
 ```
-$ npm install --save node-url
+$ npm install --save url-shim
 ```
 
 
 ## Usage
 
 ```js
-import { URL, URLSearchParams } from 'node-url';
+import { URL, URLSearchParams } from 'url-shim';
 
 // composition
 new URL('/foo', 'https://example.org/').href;
