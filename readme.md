@@ -42,9 +42,13 @@ new URL('/foo', 'https://example.org/').href;
 new URL('https://測試').href;
 //=> "https://xn--g6w251d/"
 
-// custom protocols
+// custom protocols w/ path
 new URL('webpack:///src/bundle.js');
 //=> { protocol: "webpack:", pathname: "/src/bundle.js", ... }
+
+// custom protocols w/ hostname
+new URL('git://github.com/lukeed/url-shim');
+//=> { protocol: "git:", hostname: "github.com", pathname: "/lukeed/url-shim", ... }
 
 new URL('http://foobar.com/123?a=1&b=2').searchParams instanceof URLSearchParams;
 //=> true
