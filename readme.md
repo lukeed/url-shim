@@ -1,6 +1,6 @@
 # url-shim [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/url-shim)](https://codecov.io/gh/lukeed/url-shim)
 
-> A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes.
+> A 1.53kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes.
 
 **Why?**
 
@@ -61,7 +61,7 @@ for (const [name, value] of params) {
 ## API
 
 ### URL(input, base?)
-> **Size (gzip):** `1.50 kB`
+> **Size (gzip):** `1.53 kB`
 
 See [Node.js documentation](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_class_url) for info.
 
