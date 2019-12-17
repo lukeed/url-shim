@@ -1,4 +1,2 @@
-import url from 'url';
-
-export const URL = url.URL;
-export const URLSearchParams = url.URLSearchParams;
+import { URL, URLSearchParams } from 'url';
+export { URL, URLSearchParams };
