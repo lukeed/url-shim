@@ -1,7 +1,7 @@
 {
-  "name": "url-shim",
+  "name": "node-url",
   "version": "0.0.0",
-  "repository": "lukeed/url-shim",
+  "repository": "lukeed/node-url",
   "description": "A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes",
   "module": "dist/urlshim.mjs",
   "unpkg": "dist/urlshim.min.js",

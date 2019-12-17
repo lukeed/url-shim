@@ -1,4 +1,4 @@
-# url-shim [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/url-shim)](https://codecov.io/gh/lukeed/url-shim)
+# node-url [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/node-url)](https://codecov.io/gh/lukeed/node-url)
 
 > A 1.5kB browser polyfill for the Node.js `URL` and `URLSearchParams` classes.
 
@@ -25,14 +25,14 @@ This module is available in three formats:
 ## Install
 
 ```
-$ npm install --save url-shim
+$ npm install --save node-url
 ```
 
 
 ## Usage
 
 ```js
-import { URL, URLSearchParams } from 'url-shim';
+import { URL, URLSearchParams } from 'node-url';
 
 // composition
 new URL('/foo', 'https://example.org/').href;
